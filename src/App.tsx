@@ -1,9 +1,15 @@
+import { Header } from "./components/Header"
+
 
 function App() {
   return(
     <main>
-      <h1>Hello World!</h1>
-      <p>My React Application is working</p>
+      <Header/>
+      <section>
+        <h2>Cloud Overview</h2>
+        <p>Your AWS infrastructure at a glance</p>
+      </section>
+      
     </main>
   )
 
