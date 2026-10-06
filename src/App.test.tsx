@@ -4,12 +4,18 @@ import {describe, expect, it} from 'vitest';
 import App from './App';
 
 describe('App',()=>{
-    it('renders Hello World',()=>{
+    it('renders dashboard metrics',()=>{
         render(<App/>);
         expect(
-            screen.getByRole('heading',{
-                name: /hello world/i,
-            })
+            screen.getByText('Monthly Spend'),
+        ).toBeInTheDocument();
+
+        expect(
+            screen.getByText('Potential Savings')
+        ).toBeInTheDocument();
+
+        expect(
+            screen.getByText('Active Resources')
         ).toBeInTheDocument();
     });
 })
