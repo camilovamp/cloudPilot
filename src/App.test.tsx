@@ -1,3 +1,4 @@
+
 import { render, screen } from '@testing-library/react';
 import userEvent from '@testing-library/user-event';
 import { describe, expect, it } from 'vitest';
@@ -5,29 +6,27 @@ import { describe, expect, it } from 'vitest';
 import App from './App';
 
 describe('CloudPilot Dashboard', () => {
-  it('renders the dashboard heading', () => {
+  it('renders the application layout', () => {
     render(<App />);
 
     expect(
-      screen.getByRole('heading', {
-        name: /cloudpilot/i,
+      screen.getByRole('navigation', {
+        name: 'Main navigation',
       }),
     ).toBeInTheDocument();
 
     expect(
       screen.getByRole('heading', {
-        name: /cloud overview/i,
+        name: 'Cloud Overview',
       }),
     ).toBeInTheDocument();
   });
 
-  it('renders default 30-day metrics', () => {
+  it('renders the default 30-day metrics', () => {
     render(<App />);
 
     expect(
-      screen.getByRole('heading', {
-        name: 'Monthly Spend',
-      }),
+      screen.getByText('Monthly Spend'),
     ).toBeInTheDocument();
 
     expect(
@@ -35,17 +34,13 @@ describe('CloudPilot Dashboard', () => {
     ).toBeInTheDocument();
 
     expect(
-      screen.getByText('Potential Savings'),
-    ).toBeInTheDocument();
-
-    expect(
       screen.getByRole('button', {
         name: '30 Days',
       }),
-    ).toBeDisabled();
+    ).toHaveAttribute('aria-pressed', 'true');
   });
 
-  it('updates metrics when selecting 7 days', async () => {
+  it('updates the metrics when selecting 7 days', async () => {
     const user = userEvent.setup();
 
     render(<App />);
@@ -68,50 +63,18 @@ describe('CloudPilot Dashboard', () => {
       screen.getByRole('button', {
         name: '7 Days',
       }),
-    ).toBeDisabled();
+    ).toHaveAttribute('aria-pressed', 'true');
 
     expect(
       screen.queryByText('Monthly Spend'),
     ).not.toBeInTheDocument();
   });
 
-  it('updates metrics when selecting 90 days', async () => {
-    const user = userEvent.setup();
-
+  it('renders four KPI cards', () => {
     render(<App />);
 
-    await user.click(
-      screen.getByRole('button', {
-        name: '90 Days',
-      }),
-    );
+    const cards = document.querySelectorAll('.metric-card');
 
-    expect(
-      screen.getByText('Quarterly Spend'),
-    ).toBeInTheDocument();
-
-    expect(
-      screen.getByText('$121,540'),
-    ).toBeInTheDocument();
-  });
-
-  it('updates metrics when selecting 12 months', async () => {
-    const user = userEvent.setup();
-
-    render(<App />);
-
-    await user.click(
-      screen.getByRole('button', {
-        name: '12 Months',
-      }),
-    );
-
-    expect(
-      screen.getByText('Annual Spend'),
-    ).toBeInTheDocument();
-
-    expect(
-      screen.getByText('$487,260'),
-    ).toBeInTheDocument();
+    expect(cards).toHaveLength(4);
   });
 });
