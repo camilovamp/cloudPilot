@@ -1,10 +1,11 @@
-type Trend = 'up' | 'down' | 'neutral';
+import type { Trend } from '../types/dashboard';
+
 
 type MetricCardProps ={
     title: string;
     value: string;
     change?: string;
-    trend?:Trend
+    trend?:Trend,
 }
 
 export function MetricCard({
