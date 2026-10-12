@@ -312,3 +312,47 @@ button:focus-visible {
     grid-template-columns: 1fr;
   }
 }
+
+
+.nav-item {
+  text-decoration: none;
+}
+
+.nav-item:hover {
+  background: var(--bg-hover);
+  color: var(--text-primary);
+}
+
+.nav-item-active,
+.nav-item-active:hover {
+  background: var(--accent-hover);
+  color: #ffffff;
+}
+
+.feature-page h1,
+.not-found-page h1 {
+  font-size: 28px;
+  margin: 0 0 12px;
+}
+
+.feature-page > p,
+.not-found-page > p {
+  color: var(--text-secondary);
+  margin-bottom: 24px;
+}
+
+.back-link {
+  display: inline-block;
+  margin-bottom: 20px;
+  color: #93c5fd;
+  text-decoration: none;
+}
+
+.back-link:hover {
+  text-decoration: underline;
+}
+
+.not-found-page {
+  padding: 40px 0;
+}
+

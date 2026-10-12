@@ -1,14 +1,10 @@
 
-import type { ReactNode } from 'react';
+import { Outlet } from 'react-router';
 
 import { Sidebar } from './Sidebar';
 import { Topbar } from './Topbar';
 
-type AppLayoutProps = {
-  children: ReactNode;
-};
-
-export function AppLayout({ children }: AppLayoutProps) {
+export function AppLayout() {
   return (
     <div className="app-shell">
       <Sidebar />
@@ -17,7 +13,7 @@ export function AppLayout({ children }: AppLayoutProps) {
         <Topbar />
 
         <main className="page-content">
-          {children}
+          <Outlet />
         </main>
       </div>
     </div>

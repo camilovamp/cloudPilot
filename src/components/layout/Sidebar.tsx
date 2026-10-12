@@ -1,59 +1,36 @@
 
-import {
-  LayoutDashboard,
-  ChartNoAxesCombined,
-  Server,
-  Zap,
-  Wallet,
-  Bell,
-  FileBarChart,
-  Bot,
-  Settings,
-  Cloud,
-} from 'lucide-react';
+import { Cloud } from 'lucide-react';
+import { NavLink } from 'react-router';
 
-const navigation = [
-  { label: 'Overview', icon: LayoutDashboard },
-  { label: 'Cost Explorer', icon: ChartNoAxesCombined },
-  { label: 'Resources', icon: Server },
-  { label: 'Optimization', icon: Zap },
-  { label: 'Budgets', icon: Wallet },
-  { label: 'Alerts', icon: Bell },
-  { label: 'Reports', icon: FileBarChart },
-  { label: 'AI Advisor', icon: Bot },
-  { label: 'Settings', icon: Settings },
-];
+import { navigationItems } from '../../app/navigation';
 
 export function Sidebar() {
   return (
     <aside className="sidebar">
       <div className="sidebar-brand">
-        <Cloud size={24} />
+        <Cloud size={24} aria-hidden="true" />
         <span>CloudPilot</span>
       </div>
 
       <nav aria-label="Main navigation">
         <ul className="sidebar-nav">
-          {navigation.map((item) => {
+          {navigationItems.map((item) => {
             const Icon = item.icon;
 
             return (
-              <li key={item.label}>
-                <span
-                  className={
-                    item.label === 'Overview'
+              <li key={item.path}>
+                <NavLink
+                  to={item.path}
+                  end={item.end}
+                  className={({ isActive }) =>
+                    isActive
                       ? 'nav-item nav-item-active'
                       : 'nav-item'
-                  }
-                  aria-current={
-                    item.label === 'Overview'
-                      ? 'page'
-                      : undefined
                   }
                 >
                   <Icon size={18} aria-hidden="true" />
                   <span>{item.label}</span>
-                </span>
+                </NavLink>
               </li>
             );
           })}
@@ -61,7 +38,7 @@ export function Sidebar() {
       </nav>
 
       <div className="sidebar-footer">
-        CloudPilot v0.1
+        CloudPilot v0.2
       </div>
     </aside>
   );

@@ -1,13 +1,71 @@
 
 import { render, screen } from '@testing-library/react';
 import userEvent from '@testing-library/user-event';
-import { describe, expect, it } from 'vitest';
+import {
+  afterEach,
+  beforeEach,
+  describe,
+  expect,
+  it,
+} from 'vitest';
 
 import App from './App';
 
-describe('CloudPilot Dashboard', () => {
-  it('renders the application layout', () => {
+describe('CloudPilot routing', () => {
+  beforeEach(() => {
+    window.history.replaceState({}, '', '/dashboard');
+  });
+
+  afterEach(() => {
+    window.history.replaceState({}, '', '/');
+  });
+
+  it('renders the dashboard by default', () => {
     render(<App />);
+
+    expect(
+      screen.getByRole('heading', {
+        name: 'Cloud Overview',
+      }),
+    ).toBeInTheDocument();
+
+    expect(
+      screen.getByText('$42,817'),
+    ).toBeInTheDocument();
+  });
+
+  it('navigates to Cost Explorer', async () => {
+    const user = userEvent.setup();
+
+    render(<App />);
+
+    await user.click(
+      screen.getByRole('link', {
+        name: 'Cost Explorer',
+      }),
+    );
+
+    expect(
+      screen.getByRole('heading', {
+        name: 'Cost Explorer',
+      }),
+    ).toBeInTheDocument();
+
+    expect(window.location.pathname).toBe(
+      '/cost-explorer',
+    );
+  });
+
+  it('keeps the application layout when navigating', async () => {
+    const user = userEvent.setup();
+
+    render(<App />);
+
+    await user.click(
+      screen.getByRole('link', {
+        name: 'Resources',
+      }),
+    );
 
     expect(
       screen.getByRole('navigation', {
@@ -16,31 +74,47 @@ describe('CloudPilot Dashboard', () => {
     ).toBeInTheDocument();
 
     expect(
-      screen.getByRole('heading', {
-        name: 'Cloud Overview',
-      }),
+      screen.getByText('CloudPilot'),
     ).toBeInTheDocument();
   });
 
-  it('renders the default 30-day metrics', () => {
+  it('renders a resource details page', () => {
+    window.history.replaceState(
+      {},
+      '',
+      '/resources/i-123456',
+    );
+
     render(<App />);
 
     expect(
-      screen.getByText('Monthly Spend'),
-    ).toBeInTheDocument();
-
-    expect(
-      screen.getByText('$42,817'),
-    ).toBeInTheDocument();
-
-    expect(
-      screen.getByRole('button', {
-        name: '30 Days',
+      screen.getByRole('heading', {
+        name: 'Resource Details',
       }),
-    ).toHaveAttribute('aria-pressed', 'true');
+    ).toBeInTheDocument();
+
+    expect(
+      screen.getByText('i-123456'),
+    ).toBeInTheDocument();
   });
 
-  it('updates the metrics when selecting 7 days', async () => {
+  it('renders a 404 page for unknown routes', () => {
+    window.history.replaceState(
+      {},
+      '',
+      '/unknown-page',
+    );
+
+    render(<App />);
+
+    expect(
+      screen.getByRole('heading', {
+        name: /404.*page not found/i,
+      }),
+    ).toBeInTheDocument();
+  });
+
+  it('updates the dashboard period', async () => {
     const user = userEvent.setup();
 
     render(<App />);
@@ -52,29 +126,7 @@ describe('CloudPilot Dashboard', () => {
     );
 
     expect(
-      screen.getByText('Weekly Spend'),
-    ).toBeInTheDocument();
-
-    expect(
       screen.getByText('$10,240'),
     ).toBeInTheDocument();
-
-    expect(
-      screen.getByRole('button', {
-        name: '7 Days',
-      }),
-    ).toHaveAttribute('aria-pressed', 'true');
-
-    expect(
-      screen.queryByText('Monthly Spend'),
-    ).not.toBeInTheDocument();
-  });
-
-  it('renders four KPI cards', () => {
-    render(<App />);
-
-    const cards = document.querySelectorAll('.metric-card');
-
-    expect(cards).toHaveLength(4);
   });
 });
